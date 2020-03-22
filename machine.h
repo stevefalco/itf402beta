@@ -123,8 +123,8 @@
 #endif	/* SYS_V */
 
 #ifdef	BSD
-char		*malloc () ;
 #ifdef	MINIX
+char		*malloc () ;
 #include	<sgtty.h>
 #endif	/* MINIX */
 #include	<sys/ioctl.h>
@@ -142,7 +142,11 @@ char		*malloc () ;
 #else
 #define		Void			int
 #endif
+#ifdef BSD2_11
+#define		MALLOC(s)		malloc((unsigned)s)
+#else
 #define		MALLOC(s)		malloc(s)
+#endif
 #define		FREE(p)			free((char *)p)
 #define		TIME_FUNCTION	time((long *)0)
 #define		ONE_SECOND		1

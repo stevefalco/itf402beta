@@ -77,14 +77,14 @@ typedef		byte_ptr		property ;
 #endif	/* FALSE */
 
 #ifndef	TRUE
-#define		TRUE						(!FALSE)
+#define		TRUE						(1)
 #endif	/* TRUE */
 
 #define		BITS_PER_BYTE				((byte)8)
 #define		BYTE_MASK					((byte)0xFF)
 
-#define		BELL						((char)0x07)
-#define		VERTICAL_TAB				((char)0x0B)
+#define		BELL						('\a')
+#define		VERTICAL_TAB				('\v')
 #define		LOCAL_VARS					((byte)0x10)
 #define		MAX_PARAMS					((byte)0x08)
 
