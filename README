@@ -1,1 +1,9 @@
-Compile via "make bsd_ansi".
+This is an interpreter for Infocom games.  This version is intended for use
+on a PDP-11 running 2.11BSD, but it can be compiled for other enviroments too.
+
+Compile it via "make bsd_ansi".
+
+Note that it expects you to use ^H to backspace over typos.
+
+I've only played Zork1 with it so far, but it appears to work fine, including
+saving and restoring the game.
