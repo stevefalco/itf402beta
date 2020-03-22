@@ -547,6 +547,19 @@ word	save_blocks ;
 	long					size ;
 
 	size = ((long)max_blocks + 1 ) * sizeof ( page_table_t ) ;
+#ifdef BSD2_11
+	if(size >= 32768L) {
+		/* On 2.11bsd, as near as I can determine, any single
+		 * allocation greater than 32767 will fail.  Also,
+		 * an allocation of 65535 will cause a coredump.  Thus,
+		 * we might as well limit the allocation to something
+		 * we think has at least some chance of success.
+		 */
+		saved_context = (byte_ptr)0 ;
+		base_ptr = (byte_ptr)0 ;
+		return ( (word)0 ) ;
+	}
+#endif /* BSD2_11 */
 	if ((strt_page_table = (page_table_ptr) MALLOC(size)) == (page_table_ptr)0)
 	{
 		saved_context = (byte_ptr)0 ;
@@ -554,12 +567,39 @@ word	save_blocks ;
 		return ( (word)0 ) ;
 	}
 	size = (long)save_blocks * BLOCK_SIZE ;
+#ifdef BSD2_11
+	if(size >= 32768L) {
+		/* On 2.11bsd, as near as I can determine, any single
+		 * allocation greater than 32767 will fail.  Also,
+		 * an allocation of 65535 will cause a coredump.  Thus,
+		 * we might as well limit the allocation to something
+		 * we think has at least some chance of success.
+		 */
+		base_ptr = (byte_ptr)0 ;
+		return ( (word)0 ) ;
+	}
+#endif /* BSD2_11 */
 	if (( saved_context = (byte_ptr) MALLOC(size) ) == (byte_ptr)0 )
 	{
 		base_ptr = (byte_ptr)0 ;
 		return ( (word)0 ) ;
 	}
 	size = (long)max_blocks * BLOCK_SIZE ;
+#ifdef BSD2_11
+	/* The original code implements paging.  It starts out by asking
+	 * for enough memory to hold the entire story, but then reduces the
+	 * request by BLOCK_SIZE chunks (in a loop) if there is insufficient
+	 * memory available.  As long as it can ultimately get enough chunks,
+	 * it will be happy.
+	 *
+	 * However, as noted above, we can't ask for more than 32K, so we
+	 * must first reduce the starting point, otherwise we won't stand a
+	 * chance of success.
+	 */
+	while(size >= 32768L) {
+		size -= BLOCK_SIZE;
+	}
+#endif /* BSD2_11 */
 	while ((size != 0) && ((base_ptr = (byte_ptr) MALLOC(size)) == (byte_ptr)0))
 		size -= BLOCK_SIZE ;
 	return ((word)( size / (long)BLOCK_SIZE )) ;
