@@ -170,7 +170,7 @@ sysv:
 	make CFLAGS='$(OPTFLAG) -DSYS_V -DTERMINFO' LDFLAGS='-lcurses' unix
 
 unix: $(OBJECTS)
-	$(CC) $(OPTFLAG) -o infocom $(OBJECTS) $(LDFLAGS)
+	$(CC) -i $(OPTFLAG) -o infocom $(OBJECTS) $(LDFLAGS)
 
 $(OBJECTS): infocom.h machine.h makefile
 
